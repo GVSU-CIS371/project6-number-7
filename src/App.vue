@@ -24,6 +24,8 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 
+
+
 const links = ref([
   { text: "Home", to: "/", icon: "mdi-home" },
   { text: "Electronics", to: "/electronics", icon: "mdi-laptop" },

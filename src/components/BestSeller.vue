@@ -1,7 +1,28 @@
 <template>
   <!-- your answer -->
+  <v-container fluid>
+    <v-row no-gutters>
+      <v-col
+        v-for="(n, i) in prod.filterByRating(4).length"
+        :key="n"
+        cols="3"
+      >
+      <StoreItem
+       :product=prod.filterByRating(4)[i]
+      ></StoreItem>
+       
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="ts" setup>
 // your answer
+import StoreItem from './StoreItem.vue';
+import { useProductStore } from '../stores/ProductStore';
+
+const prod = useProductStore();
+prod.init()
+
+
 </script>
