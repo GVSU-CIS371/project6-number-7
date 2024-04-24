@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { ProductDoc } from "../types/product";
 import { initProducts } from "../data-init";
 import { db } from "../Firebase";
-import { CollectionReference, QuerySnapshot, collection, getDocs, addDoc, QueryDocumentSnapshot } from "firebase/firestore";
+import { CollectionReference, QuerySnapshot, collection, getDocs, addDoc, QueryDocumentSnapshot, deleteDoc, doc } from "firebase/firestore";
 
 export const useProductStore = defineStore("ProductStore", {
   // State
@@ -43,6 +43,16 @@ export const useProductStore = defineStore("ProductStore", {
       const myProductsCol: CollectionReference = collection(db, "products");
       const newDocRef = await addDoc(myProductsCol, { data: newProduct.data, id: newProduct.id });
       this.products.push({ id: newDocRef.id, data: newProduct.data });
+    },
+    async deleteItem(productId: string) {
+      try {
+        const productRef = doc(collection(db, 'products'), productId);
+        await deleteDoc(productRef);
+        // Update the local products list after deletion
+        this.products = this.products.filter(product => product.id !== productId);
+      } catch (error) {
+        throw new Error('Error deleting product');
+      }
     },
   },
 });

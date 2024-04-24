@@ -96,6 +96,10 @@
       {{product.data.description}}
     </v-card-item>
    
+    <!-- Action Buttons -->
+    <v-card-actions>
+      <v-btn @click="confirmDelete" color="error" dark class="delete-button">Delete</v-btn>
+    </v-card-actions>
  
  
   </v-card>
@@ -112,6 +116,7 @@
 
 <script lang="ts" setup>
 import { ProductDoc } from '../types/product';
+import { useProductStore } from '../stores/ProductStore';
 
 //import {ref} from "vue";
 
@@ -119,10 +124,30 @@ type Props = {
   product: ProductDoc
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
 
+const productStore = useProductStore();
 
+const confirmDelete = async () => {
+  const confirmAction = confirm('Are you sure you want to delete this item?');
+  if (confirmAction) {
+    try {
+      await productStore.deleteItem(props.product.id); // Assuming product.id is accessible
+      alert('Product deleted successfully!');
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      alert('Error deleting product. Please try again.');
+    }
+  }
+};
 
 
 </script>
+
+<style>
+.delete-button {
+  border: none;
+  background-color: rgba(255, 0, 0, 0.2); /* Transparent red */
+}
+</style>
 

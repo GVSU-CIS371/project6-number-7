@@ -75,11 +75,12 @@ const formData = ref({
 const productStore = useProductStore();
 
 const submitForm = async () => {
+  const productId = `${Date.now()}-${Math.floor(Math.random() * 1000)}`;
   const confirmAction = confirm('Are you sure you want to add this product?');
   if (confirmAction) {
     try {
       await productStore.addItem({
-        id: '', // Update with actual ID generation logic if needed
+        id: productId,
         data: {
           name: formData.value.name,
           image: formData.value.imageUrl,
