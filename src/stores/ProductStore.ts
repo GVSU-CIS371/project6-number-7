@@ -39,5 +39,10 @@ export const useProductStore = defineStore("ProductStore", {
     filterByRating(minRating: number) {
       return this.products.filter( (p: ProductDoc) => p.data.rating > minRating )
     },
+    async addItem(newProduct: ProductDoc) {
+      const myProductsCol: CollectionReference = collection(db, "products");
+      const newDocRef = await addDoc(myProductsCol, { data: newProduct.data, id: newProduct.id });
+      this.products.push({ id: newDocRef.id, data: newProduct.data });
+    },
   },
 });
