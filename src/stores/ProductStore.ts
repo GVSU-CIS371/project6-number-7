@@ -2,7 +2,8 @@ import { defineStore } from "pinia";
 import { ProductDoc } from "../types/product";
 import { initProducts } from "../data-init";
 import { db } from "../Firebase";
-import { CollectionReference, QuerySnapshot, collection, getDocs, addDoc, QueryDocumentSnapshot, deleteDoc, doc } from "firebase/firestore";
+import { CollectionReference, QuerySnapshot, collection, getDocs, addDoc, QueryDocumentSnapshot, deleteDoc, doc, query, where, updateDoc, DocumentReference, setDoc, getDoc } from "firebase/firestore";
+import { da, tr } from "vuetify/locale";
 
 export const useProductStore = defineStore("ProductStore", {
   // State
@@ -53,6 +54,18 @@ export const useProductStore = defineStore("ProductStore", {
       } catch (error) {
         throw new Error('Error deleting product');
       }
+    },
+    async updateItem(productId: string, data: any) {
+  
+        const myCol: CollectionReference = collection(db, "products");
+        const qr = query(myCol, where("id", "==", productId));
+        getDocs(qr).then((qs: QuerySnapshot) => {
+          qs.forEach(async (qd: QueryDocumentSnapshot) => {
+            const myDoc = doc(myCol, qd.id);
+            await updateDoc(myDoc, {data: data})
+          })
+        })
+       
     },
   },
 });
