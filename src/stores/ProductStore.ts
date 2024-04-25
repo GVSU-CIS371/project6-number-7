@@ -59,13 +59,18 @@ export const useProductStore = defineStore("ProductStore", {
   
         const myCol: CollectionReference = collection(db, "products");
         const qr = query(myCol, where("id", "==", productId));
-        getDocs(qr).then((qs: QuerySnapshot) => {
-          qs.forEach(async (qd: QueryDocumentSnapshot) => {
-            const myDoc = doc(myCol, qd.id);
-            await updateDoc(myDoc, {data: data})
-          })
-        })
-       
+        const qs = await getDocs(qr);
+    
+        qs.forEach(async (qd) => {
+          const myDoc = doc(myCol, qd.id);
+          await updateDoc(myDoc, { data: data });
+    
+          // Update the local state 
+          const index = this.products.findIndex((product) => product.id === productId);
+          if (index !== -1) {
+            this.products[index].data = data;
+          }
+        });
     },
   },
 });
